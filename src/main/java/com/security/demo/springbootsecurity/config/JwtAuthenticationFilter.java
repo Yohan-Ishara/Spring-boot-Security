@@ -3,6 +3,7 @@ package com.security.demo.springbootsecurity.config;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.web.header.Header;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.function.ServerRequest;
@@ -14,9 +15,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Objects;
 
-@Service
+@Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
+     private final JwtService jwtService;
+
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
@@ -24,13 +28,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         final String authHeader=request.getHeader(request.getHeader("Authorization"));
         final String jwt;
-
+        final String userEmail;
         if (Objects.isNull(authHeader) || !authHeader.startsWith("Bearer ")){
             filterChain.doFilter(request,response);
             return;
         }
 
         jwt=authHeader.substring(7);
+
+         userEmail = jwtService.extractUsername(jwt);
 
     }
 }
