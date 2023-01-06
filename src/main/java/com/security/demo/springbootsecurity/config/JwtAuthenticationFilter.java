@@ -1,5 +1,9 @@
 package com.security.demo.springbootsecurity.config;
 
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -7,16 +11,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.security.web.header.Header;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.web.servlet.function.ServerRequest;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import org.springframework.web.filter.OncePerRequestFilter;
+
 import java.io.IOException;
 import java.util.Objects;
 
@@ -32,7 +30,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
 
-        final String authHeader=request.getHeader(request.getHeader("Authorization"));
+        final String authHeader=request.getHeader("Authorization");
         final String jwt;
         final String userEmail;
         if (Objects.isNull(authHeader) || !authHeader.startsWith("Bearer ")){
